@@ -1,5 +1,4 @@
 const fs = require('fs')
-const { paintMap } = require('./paint')
 
 const AIR = '.'
 const ROCK = '@'
@@ -7,7 +6,7 @@ const SOLID = '#'
 const GAS_RIGHT = '>'
 const GAS_LEFT = '<'
 
-fs.readFile('./input.txt', 'utf8', (err, steam) => {
+fs.readFile('./sample.txt', 'utf8', (err, steam) => {
     if (err) {
         console.error(err)
         return
@@ -41,22 +40,94 @@ function onAfterRead(steam, rocks) {
     let map = {
         coords: {},
         highestSolid: -1,
-        movingRocks: [],
-        floor: -1
+        highestY: [-1, -1, -1, -1, -1, -1, -1],
+        movingRocks: []
     }
 
     let numberOfRocks = 0
     let i = 0
-    while (numberOfRocks <= 2022) {
+    let pastStates = []
+
+    let repition = {
+        from: null,
+        to: null
+    }
+
+    while (repition.from === null) {
         if (map.movingRocks.length === 0) {
+            let newState = {
+                y: normalizeHighestY(map),
+                highestY: map.highestSolid,
+                steam: i % steam.length,
+                rock: numberOfRocks % 5,
+                numberOfRocks,
+                i
+            }
+            pastStates.forEach(state => {
+                let same = true
+                state.y.forEach((v, i) => {
+                    if (newState.y[i] !== v) {
+                        same = false
+                    }
+                })
+                if (!same) {
+                    return
+                }
+                if (state.steam !== newState.steam || state.rock !== newState.rock) {
+                    return
+                }
+                repition.from = state
+                repition.to = newState
+            })
+            pastStates.push(newState)
             setRockIntoMap(map, rocks[numberOfRocks % 5])
             numberOfRocks++
         }
+
         pushByAir(map, steam[i % steam.length])
         move(map)
         i++
     }
-    console.log(map.highestSolid + 1)
+
+    let search = 1000000000000
+    let loopSize = repition.to.numberOfRocks - repition.from.numberOfRocks
+    let loopReps = Math.floor((search - repition.from.numberOfRocks) / loopSize)
+    let height = repition.from.highestY + loopReps * (repition.to.highestY - repition.from.highestY)
+    map = {
+        coords: {},
+        highestSolid: -1,
+        highestY: [-1, -1, -1, -1, -1, -1, -1],
+        movingRocks: []
+    }
+    repition.to.y.forEach((y, i) => {
+        setCoords(map, i, y, SOLID)
+    })
+    currStoneNumber = repition.from.numberOfRocks + loopReps * loopSize
+    let steamNo = repition.to.i
+
+    let prevHight = map.highestSolid - 1
+    while (currStoneNumber <= search) {
+        if (map.movingRocks.length === 0) {
+            setRockIntoMap(map, rocks[currStoneNumber % 5])
+            currStoneNumber++
+        }
+
+        pushByAir(map, steam[steamNo % steam.length])
+        move(map)
+        steamNo++
+    }
+
+    console.log(height + map.highestSolid - prevHight )
+}
+
+function normalizeHighestY(map) {
+    let lowest = Infinity
+    map.highestY.forEach(y => {
+        if (y < lowest) {
+            lowest = y
+        }
+    })
+    return map.highestY.map(value => value - lowest)
 }
 
 function pushByAir(map, direction) {
@@ -134,10 +205,19 @@ function setRockIntoMap(map, rock) {
 }
 
 function setCoords(map, x, y, value) {
-    if (value === SOLID && y > map.highestSolid) {
-        map.highestSolid = y
+    if (value === SOLID) {
+        if (y > map.highestY[x]) {
+            map.highestY[x] = y
+        }
+        if (y > map.highestSolid) {
+            map.highestSolid = y
+        }
     }
-    map.coords[x + ':' + y] = value
+    if (value === AIR) {
+        delete map.coords[x + ':' + y]
+    } else {
+        map.coords[x + ':' + y] = value
+    }
 }
 
 function getCoords(map, x, y) {
