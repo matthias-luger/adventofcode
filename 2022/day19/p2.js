@@ -25,16 +25,12 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
     })
 
     let bestRoutes = []
-    blueprints.forEach((blueprint, i) => {
-        let best = getMaxGeodesInTime(blueprint, 24)
+    for (let i = 0; i < 3; i++) {
+        let best = getMaxGeodesInTime(blueprints[i], 32)
         bestRoutes.push(best)
-    })
+    }
 
-    let qualitySum = 0
-    bestRoutes.forEach((route, i) => {
-        qualitySum += (i + 1) * route.resources.geode
-    })
-    console.log(qualitySum)
+    console.log(bestRoutes.reduce((prev, curr) => prev * curr.resources.geode, 1))
 })
 
 function getMaxGeodesInTime(blueprint, time) {
@@ -43,6 +39,7 @@ function getMaxGeodesInTime(blueprint, time) {
     ]
     let max = null
     let earliestGeodeTimeLeft = Infinity
+    let bestSet = new Map()
 
     while (queue.length > 0) {
         let currState = queue.pop()
@@ -60,9 +57,31 @@ function getMaxGeodesInTime(blueprint, time) {
             earliestGeodeTimeLeft = currState.timeLeft
         }
         let futureStates = generateFutureStates(blueprint, currState, earliestGeodeTimeLeft)
+        for (let i = futureStates.length - 1; i >= 0; i--) {
+            let check = futureStates[i]
+            if (!bestSet.has(check.timeLeft) || isBetter(check, bestSet.get(check.timeLeft))) {
+                bestSet.set(check.timeLeft, JSON.parse(JSON.stringify(check)))
+            }
+            if (isBetter(bestSet.get(check.timeLeft), check)) {
+                futureStates.splice(i, 1)
+            }
+        }
         queue.push(...futureStates)
     }
     return max
+}
+
+function isBetter(stateA, stateB) {
+    return (
+        stateA.robots.ore >= stateB.robots.ore &&
+        stateA.robots.clay >= stateB.robots.clay &&
+        stateA.robots.obsidian >= stateB.robots.obsidian &&
+        stateA.robots.geode >= stateB.robots.geode &&
+        stateA.resources.ore > stateB.resources.ore &&
+        stateA.resources.clay > stateB.resources.clay &&
+        stateA.resources.obsidian > stateB.resources.obsidian &&
+        stateA.resources.geode > stateB.resources.geode
+    )
 }
 
 function generateFutureStates(blueprint, state, earliestGeode) {
