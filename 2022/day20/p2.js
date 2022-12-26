@@ -10,7 +10,7 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
     let split = data.split('\r\n')
     let list = []
     split.forEach((value, i) => {
-        list.push({ value: parseInt(value) * 811589153, originalIndex: i })
+        list.push({ value: parseInt(value) * key, originalIndex: i })
     })
 
     for (let mix = 0; mix < 10; mix++) {
