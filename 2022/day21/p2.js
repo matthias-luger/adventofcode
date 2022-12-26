@@ -52,15 +52,19 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
     let number = 1
     let lastResult = calculation(number)
     let increment = 100000000000000
-    let wasUnderTarget = true;
+    let wasUnderTarget = true
     while (lastResult !== targetNumber) {
         if (lastResult > targetNumber) {
-            if (wasUnderTarget) increment /= 10
+            if (wasUnderTarget) {
+                increment /= 10
+            }
             wasUnderTarget = false
             number -= increment * correlation
         }
         if (lastResult < targetNumber) {
-            if (!wasUnderTarget) increment /= 10
+            if (!wasUnderTarget) {
+                increment /= 10
+            }
             wasUnderTarget = true
             number += increment * correlation
         }
