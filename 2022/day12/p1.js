@@ -1,5 +1,6 @@
 const fs = require('fs')
 const Graph = require('node-dijkstra')
+const { dijkstra } = require('./dijkstra')
 
 fs.readFile('./input.txt', 'utf8', (err, data) => {
     if (err) {
@@ -64,11 +65,5 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
         }
     }
 
-    let route = new Graph()
-    Object.keys(graph).forEach(key => {
-        route.addNode(key, graph[key])
-    })
-
-    
-    console.log(route.path(start, end).length - 1)
+    console.log(dijkstra(graph, start, end).distance)
 })

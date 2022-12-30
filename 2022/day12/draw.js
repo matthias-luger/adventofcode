@@ -1,5 +1,5 @@
 const fs = require('fs')
-const Graph = require('node-dijkstra')
+const { dijkstra } = require('./dijkstra')
 
 String.prototype.replaceAt = function (index, replacement) {
     return this.substring(0, index) + replacement + this.substring(index + replacement.length)
@@ -68,12 +68,7 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
         }
     }
 
-    let route = new Graph()
-    Object.keys(graph).forEach(key => {
-        route.addNode(key, graph[key])
-    })
-
-    let path = route.path(start, end)
+    let path = dijkstra(graph, start, end).shortestPath
     let pos = 0
 
     let interval = setInterval(() => {
@@ -82,8 +77,10 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
         }
         let split = path[pos].split(':')
         let linie = map[+split[1]]
-        map[+split[1]] = linie.substring(0, +split[0]) + 'X' + linie.substring(+split[0] + 1)
-        console.log(map)
+        map[+split[1]] = linie.substring(0, +split[0]) + '@' + linie.substring(+split[0] + 1)
+        map.forEach(line => {
+            console.log(line)
+        })
         pos++
-    }, 200)
+    }, 50)
 })

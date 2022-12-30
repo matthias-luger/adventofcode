@@ -1,5 +1,5 @@
 const fs = require('fs')
-const Graph = require('node-dijkstra')
+const { dijkstra } = require('./dijkstra')
 
 fs.readFile('./input.txt', 'utf8', (err, data) => {
     if (err) {
@@ -36,7 +36,6 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
                 graph[x + ':' + y] = {}
             }
 
-            // check top
             if (y > 0) {
                 let top = map[y - 1][x].charCodeAt(0)
                 if (top - pos <= 1) {
@@ -64,19 +63,14 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
         }
     }
 
-    let route = new Graph()
-    Object.keys(graph).forEach(key => {
-        route.addNode(key, graph[key])
-    })
-
     let shortest = Infinity
     for (let y = 0; y < map.length; y++) {
         for (let x = 0; x < map[0].length; x++) {
             if (map[y][x] === 'S' || map[y][x] === 'a') {
-                let way = route.path(x + ':' + y, end)
+                let way = dijkstra(graph, x + ':' + y, end)
                 if (way) {
-                    if (way.length - 1 < shortest) {
-                        shortest = way.length - 1
+                    if (way.distance < shortest) {
+                        shortest = way.distance
                     }
                 }
             }
