@@ -1,5 +1,4 @@
 const fs = require('fs')
-const Graph = require('node-dijkstra')
 const { dijkstra } = require('./dijkstra')
 
 fs.readFile('./input.txt', 'utf8', (err, data) => {
