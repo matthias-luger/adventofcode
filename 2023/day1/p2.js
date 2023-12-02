@@ -56,8 +56,6 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
             checkAndSetIndex(index2)
         })
 
-        console.log(`${line} => ${firstValue}${lastValue}`)
-
         calibrationNumbersSum += parseInt(`${firstValue}${lastValue}`)
     })
 
