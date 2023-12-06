@@ -1,15 +1,5 @@
-lines = open('input.txt', 'r').readlines()
-dict = {
-    '1': 1,
-    '2': 2,
-    '3': 3,
-    '4': 4,
-    '5' : 5,
-    '6': 6,
-    '7': 7,
-    '8': 8,
-    '9': 9
-}
+lines = open("input.txt", "r").readlines()
+dict = {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9}
 
 sum = 0
 for line in lines:
@@ -33,5 +23,3 @@ for line in lines:
     sum += int(toAdd)
 
 print(sum)
-    
-    
