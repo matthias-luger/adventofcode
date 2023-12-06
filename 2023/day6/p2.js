@@ -20,24 +20,29 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
         record.distance += distances[i]
     })
 
-    let checkSum = 0
-    let waysToWin = 0
+    /**
+     * distance = (time - pause) * pause
+     * distance = -pause^2 + time * pause
+     *
+     * General formular:
+     * 0 = -pause^2 + time * pause - distance
+     *
+     * Setting into:
+     * y = ax^2 + bx + c
+     *
+     * with:
+     * a = -1
+     * b = time
+     * c = -distance
+     */
 
-    for (let i = 1; i < record.time; i++) {
-        let distance = (record.time - i) * i
-        if (distance > record.distance) {
-            waysToWin++
-        } else if (waysToWin > 0) {
-            // afterwards there are no more ways to win therefore we can skip the rest
-            break
-        }
-    }
+    let [resultA, resultB] = quadraticFormular(-1, record.time, -1 * record.distance)
 
-    if (checkSum === 0) {
-        checkSum = waysToWin
-    } else {
-        checkSum *= waysToWin
-    }
-
-    console.log(checkSum)
+    console.log(Math.floor(resultB) - Math.round(resultA))
 })
+
+function quadraticFormular(a, b, c) {
+    let resultA = (-1 * b + Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a)
+    let resultB = (-1 * b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a)
+    return [resultA, resultB]
+}
