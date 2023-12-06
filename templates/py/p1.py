@@ -1,0 +1,1 @@
+lines = open('sample.txt', 'r').readlines()
