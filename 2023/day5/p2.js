@@ -1,3 +1,8 @@
+/**
+ * Note that this solution is not optimal. It is just a proof of concept to show that it is possible to use worker threads to speed up the calculation.
+ * I implemented the better solution in the python file (p2.py).
+ */
+
 const fs = require('fs')
 const { Worker, isMainThread, workerData, parentPort } = require('worker_threads')
 
