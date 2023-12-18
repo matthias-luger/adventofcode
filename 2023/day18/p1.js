@@ -53,7 +53,7 @@ function fillInside(borderMap, x, y) {
         if (borderMap.has(key)) continue
         let [x, y] = key.split(',').map(Number)
 
-        visited.set(key, '+')
+        visited.set(key, ' ')
         queue.push(`${x + 1},${y}`)
         queue.push(`${x - 1},${y}`)
         queue.push(`${x},${y + 1}`)

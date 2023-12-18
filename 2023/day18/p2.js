@@ -37,6 +37,7 @@ fs.readFile('./input.txt', 'utf8', async (err, data) => {
     // As these are grid points and not real coordinates, the area calculated is too small
     // e.g. a rectange with the points (0,0), (0,1), (1,0), (1,1) should return 4 as there are 4 points, but the calculation returns 1 as this would be correct in a coordinate system
     // To fix this, we add for each border step (circumference) 0.5 as there is technically half a grid point "outside"
+    // Corners either have and additional 0.25 or 0.75, but as this is a loop, there are equal amounts of outside and inside corners, excluding the 4 outside corners. For these we also have to add 1 more area unit.
     console.log(sum + U * 0.5 + 1)
 })
 
