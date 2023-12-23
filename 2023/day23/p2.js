@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-fs.readFile('./sample.txt', 'utf8', (err, data) => {
+fs.readFile('./input.txt', 'utf8', (err, data) => {
     if (err) {
         console.error(err)
         return
@@ -14,17 +14,6 @@ fs.readFile('./sample.txt', 'utf8', (err, data) => {
     let graph = getGraph(map, start, end)
 
     console.log(findLongestPath(graph, start, end))
-
-    let erg = {}
-    Object.entries(graph).forEach(([key, value]) => {
-        let [x, y] = key.split(',').map(Number)
-        erg[`${y},${x}`] = []
-        Object.entries(value).forEach(([key2, value2]) => {
-            let [x2, y2] = key2.split(',').map(Number)
-            erg[`${y},${x}`].push([`${y2},${x2}`, value2])
-        })
-    })
-    console.log(erg)
 })
 
 function findLongestPath(graph, start, end) {
