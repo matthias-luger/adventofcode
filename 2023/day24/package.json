@@ -1,0 +1,9 @@
+{
+    "name": "aoc",
+    "private": true,
+    "module": "esnext",
+    "scripts": {},
+    "dependencies": {
+        "z3-solver": "^4.12.4"
+    }
+}
