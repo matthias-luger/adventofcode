@@ -10,43 +10,41 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
 
     let sum = 0
     for (const calibration of calibrations) {
-        if (isValid(calibration.result, calibration.numbers)) {
+        if (checkForValidVariants(calibration.result, calibration.numbers, [], calibration.numbers.length - 1)) {
             sum += calibration.result
         }
     }
     console.log(sum)
 })
 
-function isValid(result, numbers) {
-    let variants = getVariants([], numbers.length - 1)
-    for (const variant of variants) {
-        if (calculate(numbers, variant) === result) {
+function checkForValidVariants(result, numbers, operators, length) {
+    if (length === 0) {
+        if (calculate(numbers, operators) === result) {
             return true
         }
+        return false
     }
-}
+    if (calculate(numbers, operators) > result) {
+        return false
+    }
 
-function getVariants(operators, length) {
-    if (length === 0) {
-        return [operators]
-    }
-    let variantsA = getVariants([...operators, '+'], length - 1)
-    let variantsB = getVariants([...operators, '*'], length - 1)
-    let variantsC = getVariants([...operators, '||'], length - 1)
-    return [...variantsA, ...variantsB, ...variantsC]
+    let validA = checkForValidVariants(result, numbers, [...operators, '+'], length - 1)
+    let validB = checkForValidVariants(result, numbers, [...operators, '*'], length - 1)
+    let validC = checkForValidVariants(result, numbers, [...operators, '||'], length - 1)
+    return validA || validB || validC
 }
 
 function calculate(numbers, operators) {
     let result = numbers[0]
-    for (let i = 1; i < numbers.length; i++) {
-        if (operators[i - 1] === '+') {
-            result += numbers[i]
+    for (let i = 0; i < operators.length; i++) {
+        if (operators[i] === '+') {
+            result += numbers[i + 1]
         }
-        if (operators[i - 1] === '*') {
-            result *= numbers[i]
+        if (operators[i] === '*') {
+            result *= numbers[i + 1]
         }
-        if (operators[i - 1] === '||') {
-            result = +`${result}${numbers[i]}`
+        if (operators[i] === '||') {
+            result = +`${result}${numbers[i + 1]}`
         }
     }
     return result
