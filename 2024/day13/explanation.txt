@@ -1,0 +1,35 @@
+We try to get a general term for the problem.
+
+Variables:
+a = button a presses 
+b = button a x movement
+c = button b presses
+d = button b x movement
+e = prize x
+f = button a y movement
+g = button b y movement
+h = prize y
+
+We press the button a a certain amount of times and the button b a certain amount of times.
+These times are multiplied with the respective coordinate movements of the buttons and should equal the respective coordinate of the price.
+When we do this for the x and y coordinate respectively, we get these equations that we can solve:
+
+a * b + c * d = e
+a * f + c * g = h
+
+Solving for a and c:
+ab + cd = e     | - cd
+ab = e - cd     | / b
+a = (e - cd) / b
+
+Solving for c
+((e - cd) / b) * f + cg = h
+(fe-cdf)/b + cg = h     | * b
+fe - cdf + cgb = hb     | - fe
+-cdf + cgb = hb - fe
+c(gb - df) = hb - fe    | / (gb - df)
+
+Result:
+c = (hb - fe) / (gb - df)
+and
+a = (e - cd) / b
