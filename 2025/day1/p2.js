@@ -10,7 +10,7 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
     let zeroTicks = 0
     for (const line of lines) {
         let [newCurent, newZeroTicks] = move(current, line)
-        console.log('current:', current, 'move:', line, 'zeroTicks this move:', newZeroTicks)
+        //console.log('current:', current, 'move:', line, 'zeroTicks this move:', newZeroTicks)
         current = newCurent
         zeroTicks += newZeroTicks
     }

@@ -11,7 +11,7 @@ fs.readFile('./input.txt', 'utf8', (err, data) => {
 
     for (const line of lines) {
         current = move(current, line)
-        console.log(current)
+        //console.log(current)
         if (current === 0) {
             sum++
         }
